@@ -1,0 +1,42 @@
+remind(1) -- desktop reminders
+==============================
+
+## SYNOPSIS
+
+    remind MESSAGE TIME
+    remind COMMAND
+
+## DESCRIPTION
+
+`remind` schedules a notification for `MESSAGE` to be displayed in `TIME`
+using notify-send(1). The `TIME` specification can be everything that at(1)
+accepts.
+
+## COMMANDS
+
+* `help`:
+Shows simple usage
+
+* `list`:
+Lists current jobs scheduled by at(1).
+
+* `clear`:
+Clears all scheduled jobs. **CAUTION**: See [BUGS][]!
+
+## SEE ALSO
+
+at(1), notify-send(1)
+
+## BUGS
+
+`list` and `clear` operate using at(1), which means that may list or clear
+tasks not scheduled by `remind`. As at(1) does not have the ability to "tag"
+commands yet, there is no way to circumvent this.
+
+**Always inspect `remind list` before running `remind clear`!**
+
+Use `at -r ID` to remove single jobs.
+
+## AUTHOR
+
+Created by Tomasz Waraksa, modified by Roman Lacko.

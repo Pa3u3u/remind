@@ -1,0 +1,71 @@
+#!/bin/sh
+
+script_path=$(readlink --canonicalize "$0")
+script_bin=$(dirname "${script_path}")
+script_name=$(basename "${script_path}")
+
+argc="$#"
+command="$1"
+message="$1"
+op="$2"
+
+# Display help if no parameters or help command
+if [ $argc -eq 0 ] || [ "${command}" = "help" ] || [ "${command}" = "--help" ] \
+        || [ "${command}" = "-h" ]; then
+    echo "COMMAND"
+    echo "    remind MESSAGE TIME…"
+    echo "    remind COMMAND"
+    echo
+    echo "DESCRIPTION"
+    echo "    Displays notification at specified time"
+    echo
+    echo "EXAMPLES"
+    echo '    remind "Hi there" now'
+    echo '    remind "Time to wake up" in 5 minutes'
+    echo '    remind "Dinner" in 1 hour'
+    echo '    remind "Take a break" at noon'
+    echo '    remind "Are you ready?" at 13:00'
+    echo '    remind list'
+    echo '    remind clear'
+    echo '    remind help'
+    echo
+    exit
+fi
+
+# Run commands: list, clear
+if [ ${argc} -eq 1 ]; then
+    if [ "${command}" = "list" ]; then
+        at -l
+    elif [ "${command}" = "clear" ]; then
+        at -r "$(atq | cut -f1)"
+    else
+        echo "${script_name}: ${command}: Unknown command"
+        echo "Type 'remind' without any parameters to see the syntax."
+        exit 1
+    fi
+
+    exit
+fi
+
+shift 2
+when="$*"
+
+# Determine time of notification
+if [ "$op" = "in" ]; then
+    time="now + $when"
+elif [ "$op" = "at" ]; then
+    time="$when"
+elif [ "$op" = "now" ]; then
+    time="now"
+else
+    echo "${script_name}: Invalid time operator '$op'"
+    exit 1
+fi
+
+# Schedule the notification
+if ! echo "notify-send 'Reminder' '${message}' -u critical" | at "${time}" 2>/dev/null; then
+    echo "${script_name}: 'at ${time}' failed, invalid time specification"
+    exit 1
+fi
+
+echo "${script_name}: Notification scheduled at ${time}"
