@@ -3,19 +3,19 @@ remind(1) -- desktop reminders
 
 ## SYNOPSIS
 
-    remind MESSAGE TIME
+    remind MESSAGE TIME…
     remind COMMAND
 
 ## DESCRIPTION
 
 `remind` schedules a notification for `MESSAGE` to be displayed in `TIME`
-using notify-send(1). The `TIME` specification can be everything that at(1)
+using notify-send(1). The `TIME…` specification can be anything that at(1)
 accepts.
 
 ## COMMANDS
 
 * `help`:
-Shows simple usage
+Shows simple usage.
 
 * `list`:
 Lists current jobs scheduled by at(1).
@@ -23,19 +23,29 @@ Lists current jobs scheduled by at(1).
 * `clear`:
 Clears all scheduled jobs. **CAUTION**: See [BUGS][]!
 
+## ENVIRONMENT VARIABLES
+
+* `REMIND_ATQ`:
+Specify the `at` queue to use. The default value is `r`, so that it does not
+clash with default of at(1), `a`.
+
 ## SEE ALSO
 
 at(1), notify-send(1)
 
 ## BUGS
 
-`list` and `clear` operate using at(1), which means that may list or clear
-tasks not scheduled by `remind`. As at(1) does not have the ability to "tag"
-commands yet, there is no way to circumvent this.
+`remind` operates with at(1), which means that commands `list` and `clear` may
+also show or cancel other tasks created with at(1). The script tries to avoid
+this by using a different at(1) queue, `r`, instead of the default `a`.
+The queue can be specified with the `REMIND_ATQ` environment variable.
 
-**Always inspect `remind list` before running `remind clear`!**
+However, any other process can also operate on arbitrary queues of the given
+user, so conflicts may still occur. Always inspect the `remind list` before
+running `remind clear`.
 
-Use `at -r ID` to remove single jobs.
+There is currently no way to cancel a single reminder. Use `at -qr -r ID`
+to remove a single job. Update `-qr` accordingly if you changed the queue.
 
 ## AUTHOR
 

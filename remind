@@ -4,6 +4,8 @@ script_path=$(readlink --canonicalize "$0")
 script_bin=$(dirname "${script_path}")
 script_name=$(basename "${script_path}")
 
+REMIND_ATQ=${REMIND_ATQ:-r}
+
 msg_error() {
 	if [ -t 1 ]; then
 		printf "\e[31;1m${script_name}\e[22m: $@\e[0m\n" >&2
@@ -51,9 +53,9 @@ fi
 # Run commands: list, clear
 if [ ${argc} -eq 1 ]; then
     if [ "${command}" = "list" ]; then
-        at -l
+        at "-q${REMIND_ATQ}" -l
     elif [ "${command}" = "clear" ]; then
-        at -r "$(atq | cut -f1)"
+        at "-q${REMIND_ATQ}" -r "$(atq | cut -f1)"
     else
         echo "${script_name}: ${command}: Unknown command"
         echo "Type 'remind' without any parameters to see the syntax."
@@ -79,7 +81,7 @@ else
 fi
 
 # Schedule the notification
-if ! echo "notify-send 'Reminder' '${message}' -u critical" | at "${time}" 2>/dev/null; then
+if ! echo "notify-send 'Reminder' '${message}' -u critical" | at "-q${REMIND_ATQ}" "${time}" 2>/dev/null; then
     msg_error "'at ${time}' failed, time specification is probably invalid"
     exit 1
 fi
