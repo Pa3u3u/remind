@@ -3,14 +3,14 @@ remind(1) -- desktop reminders
 
 ## SYNOPSIS
 
-    remind MESSAGE TIME…
+    remind MESSAGE <in|at> TIME…
     remind COMMAND
 
 ## DESCRIPTION
 
-`remind` schedules a notification for `MESSAGE` to be displayed in `TIME`
-using notify-send(1). The `TIME…` specification can be anything that at(1)
-accepts.
+`remind` schedules a notification for <MESSAGE> to be displayed <in> or <at>
+specified <TIME…> using notify-send(1). The <TIME…> specification can be
+anything that at(1) accepts.
 
 ## COMMANDS
 
@@ -26,12 +26,8 @@ Clears all scheduled jobs. **CAUTION**: See [BUGS][]!
 ## ENVIRONMENT VARIABLES
 
 * `REMIND_ATQ`:
-Specify the `at` queue to use. The default value is `r`, so that it does not
+Specify the at(1) queue to use. The default value is `r`, so that it does not
 clash with default of at(1), `a`.
-
-## SEE ALSO
-
-at(1), notify-send(1)
 
 ## BUGS
 
@@ -46,6 +42,20 @@ running `remind clear`.
 
 There is currently no way to cancel a single reminder. Use `at -qr -r ID`
 to remove a single job. Update `-qr` accordingly if you changed the queue.
+
+## EXAMPLES
+
+Schedule a message "Pasta" that will display 8 minutes after running the command:
+
+	remind Pasta in 8 minutes
+
+Schedule a message "Meeting with the boss" that will display at 8:55
+
+	remind "Meeting with the boss" at 8:55
+
+## SEE ALSO
+
+at(1), notify-send(1)
 
 ## AUTHOR
 
