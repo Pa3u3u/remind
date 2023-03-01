@@ -4,6 +4,22 @@ script_path=$(readlink --canonicalize "$0")
 script_bin=$(dirname "${script_path}")
 script_name=$(basename "${script_path}")
 
+msg_error() {
+	if [ -t 1 ]; then
+		printf "\e[31;1m${script_name}\e[22m: $@\e[0m\n" >&2
+	else
+		echo "${script_name}: $@" >&2
+	fi
+}
+
+msg_ok() {
+	if [ -t 1 ]; then
+		printf "\e[32;1m${script_name}\e[22m: $@\e[0m\n"
+	else
+		echo "${script_name}: $@"
+	fi
+}
+
 argc="$#"
 command="$1"
 message="$1"
@@ -58,14 +74,14 @@ elif [ "$op" = "at" ]; then
 elif [ "$op" = "now" ]; then
     time="now"
 else
-    echo "${script_name}: Invalid time operator '$op'"
+    msg_error "Invalid time operator '$op'"
     exit 1
 fi
 
 # Schedule the notification
 if ! echo "notify-send 'Reminder' '${message}' -u critical" | at "${time}" 2>/dev/null; then
-    echo "${script_name}: 'at ${time}' failed, invalid time specification"
+    msg_error "'at ${time}' failed, time specification is probably invalid"
     exit 1
 fi
 
-echo "${script_name}: Notification scheduled at ${time}"
+msg_ok "Notification scheduled at ${time}"
