@@ -6,16 +6,16 @@
 
 ## Synopsis
 
-    remind MESSAGE TIME
-    remind COMMAND
+	remind help
+    remind MESSAGE <in|at> TIME…
+    remind <list|clear>
 
 Examples:
 
-    remind "Pasta is done" in 7 minutes
-    remind "Sleep" at 22:00
+    remind "Pasta" in 7 minutes
+    remind "Meeting with boss" at 8:55
 
-    remind list
-    remind clear
+See `man remind` (or the [source](man/remind.1.ronn)) for the complete manual.
 
 ## Dependencies
 
