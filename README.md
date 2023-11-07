@@ -6,7 +6,7 @@
 
 ## Synopsis
 
-	remind help
+    remind help
     remind MESSAGE <in|at> TIME…
     remind <list|clear>
 
