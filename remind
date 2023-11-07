@@ -81,7 +81,7 @@ else
 fi
 
 # Schedule the notification
-if ! echo "notify-send 'Reminder' '${message}' -u critical" \
+if ! echo "notify-send -a remind 'Reminder' '${message}' -u critical" \
 		| at "-q${REMIND_ATQ}" "${time}" 2>/dev/null; then
 	msg_error "'at ${time}' failed, time specification is probably invalid"
 	exit 1
