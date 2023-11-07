@@ -29,40 +29,40 @@ op="$2"
 
 # Display help if no parameters or help command
 if [ $argc -eq 0 ] || [ "${command}" = "help" ] || [ "${command}" = "--help" ] \
-        || [ "${command}" = "-h" ]; then
-    echo "COMMAND"
-    echo "    remind MESSAGE TIME…"
-    echo "    remind COMMAND"
-    echo
-    echo "DESCRIPTION"
-    echo "    Displays notification at specified time"
-    echo
-    echo "EXAMPLES"
-    echo '    remind "Hi there" now'
-    echo '    remind "Time to wake up" in 5 minutes'
-    echo '    remind "Dinner" in 1 hour'
-    echo '    remind "Take a break" at noon'
-    echo '    remind "Are you ready?" at 13:00'
-    echo '    remind list'
-    echo '    remind clear'
-    echo '    remind help'
-    echo
-    exit
+		|| [ "${command}" = "-h" ]; then
+	echo "COMMAND"
+	echo "    remind MESSAGE TIME…"
+	echo "    remind COMMAND"
+	echo
+	echo "DESCRIPTION"
+	echo "    Displays notification at specified time"
+	echo
+	echo "EXAMPLES"
+	echo '    remind "Hi there" now'
+	echo '    remind "Time to wake up" in 5 minutes'
+	echo '    remind "Dinner" in 1 hour'
+	echo '    remind "Take a break" at noon'
+	echo '    remind "Are you ready?" at 13:00'
+	echo '    remind list'
+	echo '    remind clear'
+	echo '    remind help'
+	echo
+	exit
 fi
 
 # Run commands: list, clear
 if [ ${argc} -eq 1 ]; then
-    if [ "${command}" = "list" ]; then
-        at "-q${REMIND_ATQ}" -l
-    elif [ "${command}" = "clear" ]; then
-        at "-q${REMIND_ATQ}" -r "$(atq | cut -f1)"
-    else
-        echo "${script_name}: ${command}: Unknown command"
-        echo "Type 'remind' without any parameters to see the syntax."
-        exit 1
-    fi
+	if [ "${command}" = "list" ]; then
+		at "-q${REMIND_ATQ}" -l
+	elif [ "${command}" = "clear" ]; then
+		at "-q${REMIND_ATQ}" -r "$(atq | cut -f1)"
+	else
+		echo "${script_name}: ${command}: Unknown command"
+		echo "Type 'remind' without any parameters to see the syntax."
+		exit 1
+	fi
 
-    exit
+	exit
 fi
 
 shift 2
@@ -70,20 +70,21 @@ when="$*"
 
 # Determine time of notification
 if [ "$op" = "in" ]; then
-    time="now + $when"
+	time="now + $when"
 elif [ "$op" = "at" ]; then
-    time="$when"
+	time="$when"
 elif [ "$op" = "now" ]; then
-    time="now"
+	time="now"
 else
-    msg_error "Invalid time operator '$op'"
-    exit 1
+	msg_error "Invalid time operator '$op'"
+	exit 1
 fi
 
 # Schedule the notification
-if ! echo "notify-send 'Reminder' '${message}' -u critical" | at "-q${REMIND_ATQ}" "${time}" 2>/dev/null; then
-    msg_error "'at ${time}' failed, time specification is probably invalid"
-    exit 1
+if ! echo "notify-send 'Reminder' '${message}' -u critical" \
+		| at "-q${REMIND_ATQ}" "${time}" 2>/dev/null; then
+	msg_error "'at ${time}' failed, time specification is probably invalid"
+	exit 1
 fi
 
 msg_ok "Notification scheduled at ${time}"
