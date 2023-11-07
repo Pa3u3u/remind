@@ -47,11 +47,11 @@ to remove a single job. Update `-qr` accordingly if you changed the queue.
 
 Schedule a message "Pasta" that will display 8 minutes after running the command:
 
-	remind Pasta in 8 minutes
+    remind Pasta in 8 minutes
 
 Schedule a message "Meeting with the boss" that will display at 8:55
 
-	remind "Meeting with the boss" at 8:55
+    remind "Meeting with the boss" at 8:55
 
 ## SEE ALSO
 
